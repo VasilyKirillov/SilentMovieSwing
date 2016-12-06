@@ -9,7 +9,7 @@ public class Movie {
 	private int directorId;
 	private List<Integer> genreIds;
 	private int releaseYear;
-	private float rating;
+	private double rating;
 	private String about;
 	
 	//constructor1
@@ -68,11 +68,11 @@ public class Movie {
 		return releaseYear;
 	}
 
-	public void setRating(float rating) {
+	public void setRating(double rating) {
 		this.rating = rating;
 	}
 
-	public float getRating() {
+	public double getRating() {
 		return rating;
 	}
 
@@ -90,9 +90,5 @@ public class Movie {
 				+ ", releaseYear=" + releaseYear + ", rating=" + rating + "]";
 	}
 
-//	@Override
-//	public String toString() {
-//		return "[ Movie Title: " + title + ", released in " + releaseYear + "," + " imdb rating " + rating + " ]";
-//	}
 
 }

@@ -79,7 +79,9 @@ public abstract class DaoFactory {
 			for (int i = 0; i < obj.length; i++) {
 				pstmt.setObject(i + 1, obj[i]);
 			}
-			if (pstmt.execute()) {
+			boolean ans = pstmt.execute();
+			if (obj.length>0) System.out.print(" id: "+obj[0]+" ");
+			if (ans) {
 				result = pstmt.getResultSet();
 				cnt = listFiller(result);
 				System.out.format("%s has executed, %d row(s) selected.\n", sql, cnt);

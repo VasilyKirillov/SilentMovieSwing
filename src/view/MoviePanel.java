@@ -133,15 +133,17 @@ public class MoviePanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("insert pressed");
 			movie.setTitle(title.getText());
-			movie.setDirectorId(direcCombo.getSelectedIndex());
+			movie.setDirectorId(direcCombo.getSelectedIndex()+1);
 			movie.setReleaseYear((int) yearSpinner.getValue());
-			Float r = new Float((Double) ratingSpinner.getValue());
-			movie.setRating(r);
+			movie.setRating( (double) ratingSpinner.getValue() );
 			movie.setAbout(about.getText());
 			movie.setGenreIds(genreCheck.getGenreIds());
 			if ("Insert".equals(command)) {
 				controller.createMovie(movie);
 				JOptionPane.showMessageDialog(MoviePanel.this, "Movie inserted.");
+				//////////////////////////////////////////////////////////////////////////////////
+				//need to refresh table somehow
+				//////////////////////////////////////////////////////////////////////////////////
 			} else if ("Update".equals(command)) {
 				controller.updateMovie(movie);
 				JOptionPane.showMessageDialog(MoviePanel.this, "Movie updated.");

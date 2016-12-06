@@ -52,7 +52,6 @@ public class MainFrame extends JFrame {
 		tablePanel.setTableListener(new TableListener());
 		leftPanel.getRdMvPanel().setReadPanelListener(new ReadPanelListener() {
 			public void InfoRequested() {
-				System.out.println("InfoRequested invoked after showBtn have been pressed");
 				tablePanel.getTableModel().setMovies(controller.getMovieReference());
 				tablePanel.getTableModel().setDirectors(controller.getDirectorReference());
 				tablePanel.refresh();
@@ -71,7 +70,7 @@ public class MainFrame extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				dispose();
+				MainFrame.this.dispose();
 				System.gc();
 			}
 		});
@@ -114,7 +113,6 @@ public class MainFrame extends JFrame {
 		public void rowUpdated(Movie m) {
 			leftPanel.getUpdtPanel().setMovie(m);
 			leftPanel.panelChanger(LeftActionPanel.UPDATE_PANEL);
-			JOptionPane.showMessageDialog(MainFrame.this, "movie " + m.getTitle() + " updated");
 		}
 
 		public void rowDetails(List<String> movieInfo) {
