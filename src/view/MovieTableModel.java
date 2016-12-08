@@ -61,13 +61,13 @@ public class MovieTableModel extends AbstractTableModel {
 		case 1:
 			return movies.get(row).getTitle();
 		case 2:
-			return directors.get(movies.get(row).getDirectorId() - 1);
+			return directors.get(movies.get(row).getDirectorId() );
 		case 3:
 			return getMovieGenres(movies.get(row).getGenreIds());
 		case 4:
 			return movies.get(row).getReleaseYear();
 		case 5:
-			return movies.get(row).getRating();
+			return String.format("%2.1f",movies.get(row).getRating());
 		case 6:
 			return movies.get(row).getAbout();
 
@@ -88,7 +88,7 @@ public class MovieTableModel extends AbstractTableModel {
 	public List<String> getMovieGenres(List<Integer> genreIds) {
 		List<String> mg = new ArrayList<String>(10);
 		for (Integer i : genreIds) {
-			mg.add(genres[i - 1]);
+			mg.add(genres[i]);
 		}
 		return mg;
 	}

@@ -2,7 +2,7 @@ package dao;
 
 public enum SQL {
 	/**
-	 * Enumeration of Sequel Queries
+	 * Enumeration of Queries
 	 */
 	ALL_MOVIES("SELECT * FROM MOVIE ORDER BY ID"),
 	MOVIE_LIST_GENRES("SELECT G.ID FROM GENRE G INNER JOIN MOVIE_HAS_GENRE MHG ON G.ID=MHG.GENRE_ID INNER JOIN MOVIE M ON M.ID=MHG.MOVIE_ID WHERE M.ID=?"),
@@ -28,9 +28,8 @@ public enum SQL {
 	}
 
 	/**
-	 * Method return String which represents the
-	 * 
-	 * @return sequel query text;
+	 * Method return String which represents the query
+	 * @return query text;
 	 */
 	public String query() {
 		return SQL;

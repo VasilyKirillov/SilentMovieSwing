@@ -43,13 +43,16 @@ public class MainFrame extends JFrame {
 	private Controller controller;
 
 	public MainFrame() {
+		TablePanelListener tableListener = new TableListener();
 
-		tablePanel = new TablePanel();
+				tablePanel = new TablePanel();
 		topPanel = new TopButtonPanel();
 		leftPanel = new LeftActionPanel();
 		controller = Controller.getInstance();
 		topPanel.setTopListener(new TopListener());
-		tablePanel.setTableListener(new TableListener());
+		tablePanel.setTableListener(tableListener);
+		leftPanel.getUpdtPanel().setTableListener(tableListener);
+		leftPanel.getCrtPanel().setTableListener(tableListener);
 		leftPanel.getRdMvPanel().setReadPanelListener(new ReadPanelListener() {
 			public void InfoRequested() {
 				tablePanel.getTableModel().setMovies(controller.getMovieReference());
@@ -57,6 +60,7 @@ public class MainFrame extends JFrame {
 				tablePanel.refresh();
 			}
 		});
+		
 
 		// Setting up Layout, size and location of main window
 		setLayout(new BorderLayout());
@@ -73,7 +77,7 @@ public class MainFrame extends JFrame {
 				MainFrame.this.dispose();
 				System.gc();
 			}
-		});
+		});		
 	}
 
 	// Setting actions for the top panel's buttons
@@ -84,15 +88,12 @@ public class MainFrame extends JFrame {
 			else
 				leftPanel.setVisible(true);
 		}
-
 		public void readPressed() {
 			leftPanel.panelChanger(LeftActionPanel.READ_PANEL);
 		}
-
 		public void createPressed() {
 			leftPanel.panelChanger(LeftActionPanel.CREATE_PANEL);
 		}
-
 		public void direcPressed() {
 			leftPanel.panelChanger(LeftActionPanel.DIRECTOR_PANEL);
 		}
@@ -100,6 +101,7 @@ public class MainFrame extends JFrame {
 
 	private class TableListener implements TablePanelListener {
 		public void rowDeleted(int row) {
+			System.out.println("====MF======row selected "+row);
 			int ans = JOptionPane.showConfirmDialog(MainFrame.this, "Are you sure?", "Really",
 					JOptionPane.OK_CANCEL_OPTION);
 			if (ans == JOptionPane.OK_OPTION) {
@@ -110,13 +112,24 @@ public class MainFrame extends JFrame {
 			}
 		}
 
-		public void rowUpdated(Movie m) {
+		public void updateClicked(Movie m) {
 			leftPanel.getUpdtPanel().setMovie(m);
 			leftPanel.panelChanger(LeftActionPanel.UPDATE_PANEL);
 		}
 
-		public void rowDetails(List<String> movieInfo) {
+		public void detailsClicked(List<String> movieInfo) {
 			new DetailShower(movieInfo).setVisible(true);
+		}
+		
+		public void rowModified(Movie movie, String command){
+			if ("Insert".equals(command)) {
+				controller.createMovie(movie);
+			} else if ("Update".equals(command)) {
+				controller.updateMovie(movie); 
+			}
+			JOptionPane.showMessageDialog(MainFrame.this, "Movie "+command+"ed.");
+			tablePanel.getTableModel().setMovies(controller.getMovieReference());
+			tablePanel.refresh();
 		}
 	}
 

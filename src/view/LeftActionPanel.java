@@ -34,7 +34,9 @@ public class LeftActionPanel extends JPanel {
 	public ReadMoviePanel getRdMvPanel() {
 		return rdMvPanel;
 	}
-
+	public MoviePanel getCrtPanel() {
+		return crtMvPanel;
+	}
 	public MoviePanel getUpdtPanel() {
 		return updtMvPanel;
 	}

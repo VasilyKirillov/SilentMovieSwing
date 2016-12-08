@@ -12,7 +12,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -22,6 +21,7 @@ import javax.swing.SpinnerNumberModel;
 
 import controller.Controller;
 import model.Movie;
+import view.listeners.TablePanelListener;
 
 public class MoviePanel extends JPanel {
 
@@ -41,6 +41,11 @@ public class MoviePanel extends JPanel {
 	private JButton insertBtn;
 	private Movie movie;
 	private String command;
+	private TablePanelListener tableListener;
+	
+	public void setTableListener(TablePanelListener tableListener){
+		this.tableListener = tableListener;
+	}
 
 	public void setMovie(Movie m) {
 		movie = m;
@@ -131,29 +136,22 @@ public class MoviePanel extends JPanel {
 	private class InsertButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("insert pressed");
+			
 			movie.setTitle(title.getText());
-			movie.setDirectorId(direcCombo.getSelectedIndex()+1);
+			movie.setDirectorId(direcCombo.getSelectedIndex());
 			movie.setReleaseYear((int) yearSpinner.getValue());
 			movie.setRating( (double) ratingSpinner.getValue() );
 			movie.setAbout(about.getText());
 			movie.setGenreIds(genreCheck.getGenreIds());
-			if ("Insert".equals(command)) {
-				controller.createMovie(movie);
-				JOptionPane.showMessageDialog(MoviePanel.this, "Movie inserted.");
-				//////////////////////////////////////////////////////////////////////////////////
-				//need to refresh table somehow
-				//////////////////////////////////////////////////////////////////////////////////
-			} else if ("Update".equals(command)) {
-				controller.updateMovie(movie);
-				JOptionPane.showMessageDialog(MoviePanel.this, "Movie updated.");
+			if(tableListener != null) {
+				tableListener.rowModified(movie, command);
 			}
 		}
 	}
 
 	public void dataForUpdate() {
 		title.setText(movie.getTitle());
-		direcCombo.setSelectedIndex(movie.getDirectorId() - 1);
+		direcCombo.setSelectedIndex(movie.getDirectorId() );
 		yearSpinner.setValue(movie.getReleaseYear());
 		genreCheck.setGenreIds(movie.getGenreIds());
 		ratingSpinner.setValue(movie.getRating());

@@ -27,7 +27,6 @@ public class Controller {
 	public List<Director> getDirectorReference() {
 		return directorReference;
 	}
-
 	public List<Movie> getMovieReference() {
 		return movieReference;
 	}

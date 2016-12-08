@@ -8,7 +8,9 @@ public interface TablePanelListener {
 
 	public void rowDeleted(int row);
 	
-	public void rowUpdated(Movie m);
+	public void updateClicked(Movie m);
 	
-	public void rowDetails(List<String> movieInfo);
+	public void detailsClicked(List<String> movieInfo);
+	
+	public void rowModified(Movie movie, String command);
 }

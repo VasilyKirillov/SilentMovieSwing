@@ -89,14 +89,13 @@ public class TablePanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			int row = table.getSelectedRow();
-
 			if (detailItem.equals(e.getSource())) {
 				if (tableListener != null)
-					tableListener.rowDetails(getColumnInfo(row));
+					tableListener.detailsClicked(getColumnInfo(row));
 			}
 			if (updateItem.equals(e.getSource())) {
 				if (tableListener != null)
-					tableListener.rowUpdated(tableModel.getMovies().get(row));
+					tableListener.updateClicked(tableModel.getMovies().get(row));
 			}
 			if (deleteItem.equals(e.getSource())) {
 				if (tableListener != null)

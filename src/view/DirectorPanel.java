@@ -23,10 +23,10 @@ import model.Director;
 public class DirectorPanel extends JPanel {
 
 	/**
-	 * 	This panel is part of LeftActionPanel of MainFrame of the application.
-	 *  It consist of two parts: "Insert new film director"
-	 *  and "Delete existing film director".
-	 *  If director has at least 1 movie record in database, deleting won't happen. 
+	 * This panel is part of LeftActionPanel of MainFrame of the application. It
+	 * consist of two parts: "Insert new film director" and "Delete existing
+	 * film director". If director has at least 1 movie record in database,
+	 * deleting won't happen.
 	 */
 	private static final long serialVersionUID = 1L;
 	private Controller controller;
@@ -130,7 +130,6 @@ public class DirectorPanel extends JPanel {
 			if (insDirecBtn.equals((JButton) e.getSource())) {
 				insertDierector();
 			}
-
 			if (delDirecBtn.equals((JButton) e.getSource())) {
 				deleteDirector();
 			}
@@ -150,11 +149,13 @@ public class DirectorPanel extends JPanel {
 
 		public void deleteDirector() {
 			int index = direcCombo.getSelectedIndex();
-			int ans = JOptionPane.showConfirmDialog(DirectorPanel.this, "Are you sure?", "Really",
-					JOptionPane.OK_CANCEL_OPTION);
-			if (ans == JOptionPane.OK_OPTION) {
-				controller.deleteDirector(index);
-				direcModel.removeElementAt(index);
+			if (index > -1) { // checking for the empty comboBox
+				int ans = JOptionPane.showConfirmDialog(DirectorPanel.this, "Are you sure?", "Really",
+						JOptionPane.OK_CANCEL_OPTION);
+				if (ans == JOptionPane.OK_OPTION) {
+					controller.deleteDirector(index);
+					direcModel.removeElementAt(index);
+				}
 			}
 
 		}

@@ -32,6 +32,7 @@ public class MovieDaoImpl extends DaoFactory implements MovieDao {
 
 	@Override
 	public void deleteMovie(int id) {
+											System.out.println("======movieDaoImpl=="+id);
 		executor(SQL.DELETE_MOVIEGENRE_BY_ID, id);
 		executor(SQL.DELETE_MOVIE_BY_ID, id);
 	}
@@ -74,7 +75,7 @@ public class MovieDaoImpl extends DaoFactory implements MovieDao {
 
 	@Override
 	public List<Movie> getMoviesByDirector(String last) {
-		executor(SQL.MOVIES_BY_DIRECTOR, last+"%");
+		executor(SQL.MOVIES_BY_DIRECTOR, last);
 		return movieList;
 	}
 

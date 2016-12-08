@@ -169,7 +169,7 @@ public class ReadMoviePanel extends JPanel {
 		int id = 0;
 		for(int i=0; i<g.length; i++)
 			if (g[i].equals( genreCombo.getSelectedItem().toString() ) )
-				id = i+1;
+				id = i; 
 		return id;
 				
 	}
