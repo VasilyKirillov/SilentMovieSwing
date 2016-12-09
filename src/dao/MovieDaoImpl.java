@@ -1,7 +1,11 @@
 package dao;
 
+import java.sql.BatchUpdateException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,29 +16,109 @@ public class MovieDaoImpl extends DaoFactory implements MovieDao {
 
 	private List<Movie> movieList = new LinkedList<Movie>();
 
+	@Override
 	public void createMovie(Movie m) {
-		executor(SQL.INSERT_MOVIE, m.getTitle(), m.getDirectorId(), m.getReleaseYear(), m.getRating(), m.getAbout());
-		for (int g : m.getGenreIds()) {
-			executor(SQL.INSERT_MOVIE_GENRES, m.getId(), g);
+		int id = 0;
+		try {
+			conn = getConnection();
+			conn.setAutoCommit(false);
+			pstmt = conn.prepareStatement(SQL.MOVIE_ID.query());
+			result = pstmt.executeQuery();
+			result.next();
+			id = result.getInt(1);
+			pstmt = conn.prepareStatement(SQL.INSERT_MOVIE.query());
+			pstmt.setInt(1, id);
+			pstmt.setString(2, m.getTitle());
+			pstmt.setInt(3, m.getDirectorId());
+			pstmt.setInt(4, m.getReleaseYear());
+			pstmt.setDouble(5, m.getRating());
+			pstmt.setString(6, m.getAbout());
+			pstmt.execute();
+			for (int genreId : m.getGenreIds()) {
+				pstmt = conn.prepareStatement(SQL.INSERT_MOVIE_GENRES.query());
+				pstmt.setInt(1, id);
+				pstmt.setInt(2, genreId);
+				pstmt.execute();
+			}
+			conn.commit();
+		} catch (SQLException e) {
+			System.out.println("Can't insert movie.");
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				System.out.println("Can't rollback.");
+				e1.printStackTrace(System.out);
+			}
+			e.printStackTrace(System.out);
+		} finally {
+			closeConnection(result, pstmt, conn);
 		}
+		System.out.format("Movie id: %d  inserted.\n", id);
 	}
 
 	@Override
 	public void updateMovie(Movie m) {
-		executor(SQL.UPDATE_MOVIE, m.getTitle(), m.getDirectorId(), m.getReleaseYear(), m.getRating(), m.getAbout(),
-				m.getId());
-		executor(SQL.DELETE_MOVIEGENRE_BY_ID, m.getId());
-		for (int g : m.getGenreIds()) {
-			executor(SQL.INSERT_MOVIE_GENRES, m.getId(), g);
+		int id = m.getId();
+		try {
+			conn = getConnection();
+			conn.setAutoCommit(false);
+			pstmt = conn.prepareStatement(SQL.UPDATE_MOVIE.query());
+			pstmt.setString(1, m.getTitle());
+			pstmt.setInt(2, m.getDirectorId());
+			pstmt.setInt(3, m.getReleaseYear());
+			pstmt.setDouble(4, m.getRating());
+			pstmt.setString(5, m.getAbout());
+			pstmt.setInt(6, id);
+			pstmt.addBatch();
+			pstmt = conn.prepareStatement(SQL.DELETE_MOVIEGENRE_BY_ID.query());
+			pstmt.setInt(1, id);
+			pstmt.addBatch();
+			for (int g : m.getGenreIds()) {
+				pstmt = conn.prepareStatement(SQL.INSERT_MOVIE_GENRES.query());
+				pstmt.setInt(1, id);
+				pstmt.setInt(2, g);
+				pstmt.addBatch();
+			}
+			pstmt.executeBatch();
+			conn.commit();
+		} catch (SQLException e) {
+			System.out.println("Can't update movie " + e);
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				System.out.println("Can't rollback.");
+				e1.printStackTrace(System.out);
+			}
+		} finally {
+			closeConnection(pstmt, conn);
 		}
-
+		System.out.format("Movie id: %d  updated.\n", id);
 	}
 
 	@Override
 	public void deleteMovie(int id) {
-											System.out.println("======movieDaoImpl=="+id);
-		executor(SQL.DELETE_MOVIEGENRE_BY_ID, id);
-		executor(SQL.DELETE_MOVIE_BY_ID, id);
+		try {
+			conn = getConnection();
+			conn.setAutoCommit(false);
+			pstmt = conn.prepareStatement(SQL.DELETE_MOVIEGENRE_BY_ID.query());
+			pstmt.setInt(1, id);
+			pstmt.execute();
+			pstmt = conn.prepareStatement(SQL.DELETE_MOVIE_BY_ID.query());
+			pstmt.setInt(1, id);
+			pstmt.execute();
+			conn.commit();
+		} catch (SQLException e) {
+			System.out.println("Can't delete movie " + e);
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				System.out.println("Can't rollback.");
+				e1.printStackTrace(System.out);
+			}
+		} finally {
+			closeConnection(pstmt, conn);
+		}
+		System.out.format("Movie id: %d  deleted.\n", id);
 	}
 
 	@Override
@@ -44,7 +128,7 @@ public class MovieDaoImpl extends DaoFactory implements MovieDao {
 		while (rs.next()) {
 			movieList.add(new Movie(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getFloat(5),
 					rs.getString(6), null));
-			cnt ++;
+			cnt++;
 		}
 		setGenreIds(movieList);
 		return cnt;

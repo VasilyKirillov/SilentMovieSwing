@@ -45,7 +45,7 @@ public class MainFrame extends JFrame {
 	public MainFrame() {
 		TablePanelListener tableListener = new TableListener();
 
-				tablePanel = new TablePanel();
+		tablePanel = new TablePanel();
 		topPanel = new TopButtonPanel();
 		leftPanel = new LeftActionPanel();
 		controller = Controller.getInstance();
@@ -101,7 +101,6 @@ public class MainFrame extends JFrame {
 
 	private class TableListener implements TablePanelListener {
 		public void rowDeleted(int row) {
-			System.out.println("====MF======row selected "+row);
 			int ans = JOptionPane.showConfirmDialog(MainFrame.this, "Are you sure?", "Really",
 					JOptionPane.OK_CANCEL_OPTION);
 			if (ans == JOptionPane.OK_OPTION) {
