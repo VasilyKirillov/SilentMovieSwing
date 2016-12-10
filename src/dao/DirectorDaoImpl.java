@@ -19,6 +19,7 @@ public class DirectorDaoImpl extends DaoFactory implements DirectorDao {
 	@Override
 	public void deleteDirector(int id) {
 		executor(SQL.DELETE_DIRECTOR_BY_ID, id);
+		System.out.format("director id: %d deleted.\n", id);
 	}
 
 	@Override

@@ -1,14 +1,13 @@
 package dao;
 
-import java.sql.BatchUpdateException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import model.Movie;
 
@@ -94,7 +93,7 @@ public class MovieDaoImpl extends DaoFactory implements MovieDao {
 		}
 		System.out.format("Movie id: %d  updated.\n", id);
 	}
-
+	
 	@Override
 	public void deleteMovie(int id) {
 		try {
@@ -108,17 +107,18 @@ public class MovieDaoImpl extends DaoFactory implements MovieDao {
 			pstmt.execute();
 			conn.commit();
 		} catch (SQLException e) {
-			System.out.println("Can't delete movie " + e);
+			System.out.println("Can't delete movie id: " + id);
+			e.printStackTrace();
 			try {
 				conn.rollback();
 			} catch (SQLException e1) {
 				System.out.println("Can't rollback.");
-				e1.printStackTrace(System.out);
+				e1.printStackTrace();
 			}
 		} finally {
 			closeConnection(pstmt, conn);
 		}
-		System.out.format("Movie id: %d  deleted.\n", id);
+		System.out.format("Movie id: %d deleted.\n", id);
 	}
 
 	@Override

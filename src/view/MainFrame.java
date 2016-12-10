@@ -100,11 +100,12 @@ public class MainFrame extends JFrame {
 	}
 
 	private class TableListener implements TablePanelListener {
+		
 		public void rowDeleted(int row) {
-			int ans = JOptionPane.showConfirmDialog(MainFrame.this, "Are you sure?", "Really",
-					JOptionPane.OK_CANCEL_OPTION);
+			int ans = JOptionPane.showConfirmDialog(MainFrame.this, "Are you sure?", "Really", JOptionPane.OK_CANCEL_OPTION);
 			if (ans == JOptionPane.OK_OPTION) {
-				controller.deleteMovie(row);
+				int movieId = controller.getMovieReference().get(row).getId();
+				controller.deleteMovie(movieId);
 				controller.getMovieReference().remove(row);
 				tablePanel.getTableModel().setMovies(controller.getMovieReference());
 				tablePanel.refresh();
